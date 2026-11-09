@@ -1,0 +1,177 @@
+{
+  "historia": "HU-01",
+  "casos": [
+    {
+      "id": "CP-01",
+      "escenario": "Registro exitoso de un empleado nuevo",
+      "nivel": "api",
+      "precondiciones": [
+        "La API está disponible en http://localhost:8000",
+        "No existe ningún empleado con correo ana.lopez@empresa.com en la base de datos"
+      ],
+      "pasos": [
+        "Enviar POST a /api/empleados con body JSON: {\"nombre\": \"Ana López\", \"correo\": \"ana.lopez@empresa.com\", \"puesto\": \"Analista de Datos\", \"departamento\": \"Tecnología\", \"fecha_ingreso\": \"2026-11-08\"}",
+        "Verificar que el código HTTP de la respuesta es 201",
+        "Verificar que el cuerpo de la respuesta contiene el campo \"numero_empleado\" con formato EMP-NNNN (cuatro dígitos)",
+        "Verificar que el campo \"estado\" en la respuesta es \"activo\"",
+        "Verificar que el campo \"correo\" en la respuesta es \"ana.lopez@empresa.com\" en minúsculas"
+      ],
+      "datos": {
+        "url": "/api/empleados",
+        "metodo": "POST",
+        "nombre": "Ana López",
+        "correo": "ana.lopez@empresa.com",
+        "puesto": "Analista de Datos",
+        "departamento": "Tecnología",
+        "fecha_ingreso": "2026-11-08",
+        "codigo_esperado": "201",
+        "patron_numero_empleado": "EMP-\\d{4}",
+        "estado_esperado": "activo"
+      },
+      "resultado_esperado": "La API responde 201, el cuerpo incluye el campo numero_empleado con formato EMP-NNNN, el campo estado es activo y el campo correo aparece en minúsculas."
+    },
+    {
+      "id": "CP-02",
+      "escenario": "Registro exitoso de un empleado nuevo",
+      "nivel": "e2e",
+      "precondiciones": [
+        "La aplicación está disponible en http://localhost:5173",
+        "No existe ningún empleado con correo ana.lopez@empresa.com en la base de datos",
+        "El formulario de registro de empleado está visible en pantalla"
+      ],
+      "pasos": [
+        "Localizar el campo con data-testid=\"empleado-nombre\" e ingresar el valor \"Ana López\"",
+        "Localizar el campo con data-testid=\"empleado-correo\" e ingresar el valor \"ana.lopez@empresa.com\"",
+        "Localizar el campo con data-testid=\"empleado-puesto\" e ingresar el valor \"Analista de Datos\"",
+        "Localizar el campo con data-testid=\"empleado-departamento\" y seleccionar \"Tecnología\"",
+        "Localizar el campo con data-testid=\"empleado-fecha-ingreso\" e ingresar el valor \"2026-11-08\"",
+        "Hacer clic en el botón con data-testid=\"empleado-guardar\"",
+        "Esperar a que aparezca el elemento con data-testid=\"mensaje-exito\"",
+        "Verificar que el texto del elemento data-testid=\"mensaje-exito\" contiene el numero_empleado con formato EMP-NNNN",
+        "Verificar que en la tabla (data-testid=\"tabla-empleados\") aparece una fila cuyo data-testid \"estado-empleado-{id}\" muestra el texto \"Activo\""
+      ],
+      "datos": {
+        "nombre": "Ana López",
+        "correo": "ana.lopez@empresa.com",
+        "puesto": "Analista de Datos",
+        "departamento": "Tecnología",
+        "fecha_ingreso": "2026-11-08",
+        "testid_nombre": "empleado-nombre",
+        "testid_correo": "empleado-correo",
+        "testid_puesto": "empleado-puesto",
+        "testid_departamento": "empleado-departamento",
+        "testid_fecha_ingreso": "empleado-fecha-ingreso",
+        "testid_guardar": "empleado-guardar",
+        "testid_mensaje_exito": "mensaje-exito",
+        "testid_tabla": "tabla-empleados",
+        "patron_numero_empleado": "EMP-\\d{4}",
+        "estado_esperado": "Activo"
+      },
+      "resultado_esperado": "Se muestra el elemento mensaje-exito con el numero_empleado asignado en formato EMP-NNNN. La fila del nuevo empleado aparece en tabla-empleados con estado Activo."
+    },
+    {
+      "id": "CP-03",
+      "escenario": "Rechazo por correo duplicado sin importar mayúsculas",
+      "nivel": "api",
+      "precondiciones": [
+        "La API está disponible en http://localhost:8000",
+        "Ya existe un empleado registrado con correo pedro.garcia@empresa.com en la base de datos"
+      ],
+      "pasos": [
+        "Enviar POST a /api/empleados con body JSON: {\"nombre\": \"Pedro García\", \"correo\": \"PEDRO.GARCIA@empresa.com\", \"puesto\": \"Ejecutivo de Ventas\", \"departamento\": \"Ventas\", \"fecha_ingreso\": \"2026-11-08\"}",
+        "Verificar que el código HTTP de la respuesta es 409",
+        "Verificar que el cuerpo de la respuesta contiene el campo \"detail\" con el mensaje \"El correo ya está registrado\""
+      ],
+      "datos": {
+        "url": "/api/empleados",
+        "metodo": "POST",
+        "nombre": "Pedro García",
+        "correo": "PEDRO.GARCIA@empresa.com",
+        "correo_existente": "pedro.garcia@empresa.com",
+        "puesto": "Ejecutivo de Ventas",
+        "departamento": "Ventas",
+        "fecha_ingreso": "2026-11-08",
+        "codigo_esperado": "409",
+        "mensaje_esperado": "El correo ya está registrado"
+      },
+      "resultado_esperado": "La API responde 409 y el cuerpo contiene {\"detail\": \"El correo ya está registrado\"}."
+    },
+    {
+      "id": "CP-04",
+      "escenario": "Rechazo por correo con dominio no corporativo",
+      "nivel": "api",
+      "precondiciones": [
+        "La API está disponible en http://localhost:8000",
+        "No existe ningún empleado con correo maria.ruiz@gmail.com en la base de datos"
+      ],
+      "pasos": [
+        "Enviar POST a /api/empleados con body JSON: {\"nombre\": \"María Ruiz\", \"correo\": \"maria.ruiz@gmail.com\", \"puesto\": \"Contadora\", \"departamento\": \"Finanzas\", \"fecha_ingreso\": \"2026-11-08\"}",
+        "Verificar que el código HTTP de la respuesta es 422",
+        "Verificar que el cuerpo de la respuesta contiene el campo \"detail\" con el mensaje \"Usa el correo corporativo @empresa.com\""
+      ],
+      "datos": {
+        "url": "/api/empleados",
+        "metodo": "POST",
+        "nombre": "María Ruiz",
+        "correo": "maria.ruiz@gmail.com",
+        "puesto": "Contadora",
+        "departamento": "Finanzas",
+        "fecha_ingreso": "2026-11-08",
+        "codigo_esperado": "422",
+        "mensaje_esperado": "Usa el correo corporativo @empresa.com"
+      },
+      "resultado_esperado": "La API responde 422 y el cuerpo contiene {\"detail\": \"Usa el correo corporativo @empresa.com\"}."
+    },
+    {
+      "id": "CP-05",
+      "escenario": "Rechazo por campo obligatorio ausente",
+      "nivel": "api",
+      "precondiciones": [
+        "La API está disponible en http://localhost:8000"
+      ],
+      "pasos": [
+        "Enviar POST a /api/empleados con body JSON sin el campo \"puesto\": {\"nombre\": \"Luis Torres\", \"correo\": \"luis.torres@empresa.com\", \"departamento\": \"Operaciones\", \"fecha_ingreso\": \"2026-11-08\"}",
+        "Verificar que el código HTTP de la respuesta es 422",
+        "Verificar que el cuerpo de la respuesta contiene una referencia al campo \"puesto\" indicando que debe corregirse"
+      ],
+      "datos": {
+        "url": "/api/empleados",
+        "metodo": "POST",
+        "nombre": "Luis Torres",
+        "correo": "luis.torres@empresa.com",
+        "puesto": "",
+        "departamento": "Operaciones",
+        "fecha_ingreso": "2026-11-08",
+        "campo_ausente": "puesto",
+        "codigo_esperado": "422"
+      },
+      "resultado_esperado": "La API responde 422 y el cuerpo de la respuesta indica que el campo puesto debe corregirse (el mensaje de error referencia explícitamente el campo puesto)."
+    },
+    {
+      "id": "CP-06",
+      "escenario": "Rechazo por fecha de ingreso futura",
+      "nivel": "api",
+      "precondiciones": [
+        "La API está disponible en http://localhost:8000",
+        "No existe ningún empleado con correo carla.nunez@empresa.com en la base de datos"
+      ],
+      "pasos": [
+        "Enviar POST a /api/empleados con body JSON: {\"nombre\": \"Carla Nuñez\", \"correo\": \"carla.nunez@empresa.com\", \"puesto\": \"Gerente de Operaciones\", \"departamento\": \"Operaciones\", \"fecha_ingreso\": \"2027-01-01\"}",
+        "Verificar que el código HTTP de la respuesta es 422",
+        "Verificar que el cuerpo de la respuesta contiene el campo \"detail\" con el mensaje \"La fecha de ingreso no puede ser futura\""
+      ],
+      "datos": {
+        "url": "/api/empleados",
+        "metodo": "POST",
+        "nombre": "Carla Nuñez",
+        "correo": "carla.nunez@empresa.com",
+        "puesto": "Gerente de Operaciones",
+        "departamento": "Operaciones",
+        "fecha_ingreso": "2027-01-01",
+        "codigo_esperado": "422",
+        "mensaje_esperado": "La fecha de ingreso no puede ser futura"
+      },
+      "resultado_esperado": "La API responde 422 y el cuerpo contiene {\"detail\": \"La fecha de ingreso no puede ser futura\"}."
+    }
+  ]
+}

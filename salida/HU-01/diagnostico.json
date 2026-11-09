@@ -1,0 +1,6 @@
+{
+  "responsable": "desarrollador",
+  "causa": "La API responde al campo obligatorio ausente con {'detail':'Field required'}, sin mencionar el nombre del campo 'puesto'. El criterio exige que la respuesta indique explicitamente qué campo debe corregirse.",
+  "criterio": "Escenario: Rechazo por campo obligatorio ausente — 'Y el cuerpo de la respuesta indica que el campo \"puesto\" debe corregirse'",
+  "instruccion": "Modificar el manejador de errores de validación en la API para que el cuerpo del 422 incluya el nombre del campo fallido (en este caso 'puesto'). Por ejemplo, retornar {'detail': 'El campo puesto es obligatorio'} o estructurar el detalle de Pydantic/FastAPI para que exponga el 'loc' del campo faltante en la respuesta JSON."
+}
