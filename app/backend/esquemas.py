@@ -80,3 +80,10 @@ class EmpleadoSalida(BaseModel):
     creado_en: datetime
 
     model_config = {"from_attributes": True}
+
+
+class EmpleadoListaSalida(BaseModel):
+    """Respuesta del listado de empleados, con lista y mensaje opcional."""
+
+    empleados: list[EmpleadoSalida]
+    mensaje: str = ""

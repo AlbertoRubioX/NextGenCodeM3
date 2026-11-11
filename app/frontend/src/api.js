@@ -33,11 +33,18 @@ export async function crearEmpleado(datos) {
 }
 
 /**
- * Obtiene la lista de empleados.
- * @returns {Promise<Array>} Lista de empleados.
+ * Obtiene la lista de empleados, con filtros opcionales.
+ * @param {Object} params - Parámetros de búsqueda: { q, departamento }.
+ * @returns {Promise<{ empleados: Array, mensaje: string }>} Resultado con lista y mensaje.
  */
-export async function obtenerEmpleados() {
-  const respuesta = await fetch("/api/empleados");
+export async function obtenerEmpleados(params = {}) {
+  const qs = new URLSearchParams();
+  if (params.q) qs.set("q", params.q);
+  if (params.departamento) qs.set("departamento", params.departamento);
+
+  const url = qs.toString() ? `/api/empleados?${qs.toString()}` : "/api/empleados";
+
+  const respuesta = await fetch(url);
   if (!respuesta.ok) {
     throw new Error("No se pudo cargar la lista de empleados");
   }
@@ -54,4 +61,27 @@ export async function obtenerDepartamentos() {
     throw new Error("No se pudo cargar la lista de departamentos");
   }
   return respuesta.json();
+}
+
+/**
+ * Da de baja a un empleado (cambia su estado a 'baja').
+ * @param {number} id - Identificador del empleado.
+ * @returns {Promise<Object>} Empleado actualizado.
+ */
+export async function darDeBaja(id) {
+  const respuesta = await fetch(`/api/empleados/${id}/baja`, {
+    method: "PATCH",
+  });
+
+  const cuerpo = await respuesta.json();
+
+  if (!respuesta.ok) {
+    const mensaje =
+      typeof cuerpo.detail === "string" ? cuerpo.detail : "Error al dar de baja";
+    const error = new Error(mensaje);
+    error.status = respuesta.status;
+    throw error;
+  }
+
+  return cuerpo;
 }

@@ -1,0 +1,6 @@
+{
+  "responsable": "desarrollador",
+  "causa": "La aplicacion muestra a Pedro Garcia con estado 'Activo' en lugar de 'Baja' (el dato de estado no se persiste o no se expone correctamente), y el campo de busqueda del front-end no filtra los resultados: al escribir 'ana lopez' devuelve las 14 filas en lugar de 1, y al buscar por correo en mayusculas devuelve 0 filas en lugar de 1.",
+  "criterio": "Escenario: El directorio muestra empleados dados de baja — 'Dado que existe un empleado con nombre Pedro Garcia cuyo estado es baja, Entonces el cuerpo de la respuesta incluye a Pedro Garcia con estado baja'; y Escenario: Buscar empleado por nombre sin distinguir mayusculas — 'Cuando envio una peticion GET a /empleados?q=ana+lopez, Entonces el cuerpo de la respuesta contiene exactamente 1 empleado con nombre Ana Lopez'.",
+  "instruccion": "Corregir tres defectos en la aplicacion: (1) persistir y exponer correctamente el estado 'baja' del empleado Pedro Garcia (EMP-0002) para que el elemento data-testid='estado-empleado-{id}' muestre 'Baja' en el front-end; (2) implementar filtrado case-insensitive por nombre en el endpoint GET /empleados?q= para que buscar 'ana lopez' devuelva exactamente 1 resultado; (3) implementar filtrado case-insensitive por correo electronico en el mismo endpoint para que buscar 'ANA.LOPEZ@EMPRESA.COM' devuelva exactamente 1 resultado."
+}

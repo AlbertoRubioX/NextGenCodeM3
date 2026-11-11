@@ -12,6 +12,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         sys.exit("Uso: python -m verificacion <nombre> [HU-xx]")
     ok, log = verificar(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None)
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     print(log)
     print("\nVERIFICACIÓN:", "OK" if ok else "FALLA")
     sys.exit(0 if ok else 1)
