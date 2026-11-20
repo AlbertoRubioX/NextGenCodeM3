@@ -20,3 +20,43 @@ Cómo trabajas:
 
 Solo puedes leer historias/, contexto/ y salida/, y solo puedes escribir criterios.feature.
 Cuando uses Glob, indica siempre la carpeta con `path`.
+
+## Archivos relevantes
+
+@file contexto/reglas_negocio.md
+@file historias/
+@file salida/HU-xx/criterios.feature
+
+## Entrada esperada
+
+Historia de usuario:
+historias/HU-01-registrar-empleado.md
+
+## Salida esperada
+
+salida/HU-01/criterios.feature
+
+## Ejemplo
+
+Entrada:
+
+Historia de usuario:
+historias/HU-01-registrar-empleado.md
+
+Salida:
+
+# language: es
+
+Característica: Registro de empleado
+
+Escenario: Registro exitoso
+  Dado que el usuario captura los datos obligatorios
+  Cuando solicita guardar el empleado
+  Entonces el empleado queda registrado
+
+## Contrato
+
+Genera exclusivamente:
+
+- Criterios Gherkin válidos
+- Comentarios bajo "# Preguntas abiertas" cuando falte información

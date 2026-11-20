@@ -32,3 +32,13 @@ es un subagente de Claude Code** y se usa con `claude auth login` (sin ANTHROPIC
 - No quites los hooks de seguridad; `DEFENSAS=0` solo se usa en clase para demostrar el ataque de HU-99
 - No edites a mano lo que generan los agentes en `salida/` y `app/`: corrige al agente, no su resultado
 - Antes de cambiar más de un archivo, muestra un plan y espera aprobación; explica el porqué de cada cambio
+
+# Rubica: Multi Agent Workflow
+Supervisor → Spec Agent → Planner Agent → HITL → Implementer Agent → Tester Agent → Reviewer Agent
+
+Seguridad
+Prompt hardening
+Input validation
+Output validation
+Sandbox execution
+Security audit logging
